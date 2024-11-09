@@ -3,4 +3,4 @@ user1@example.com,Success,Passport verified successfully,
 user2@example.com,Failed,Passport name mismatch,Suspicious
 user3@example.com,Failed,Passport expired,Banned
 user@example.com,failure,Email not found in database.,rejected
-szeyusim@gmail.com,success,Name matches.,
+szeyusim@gmail.com,success,Bank statement from Publicbank verified.,

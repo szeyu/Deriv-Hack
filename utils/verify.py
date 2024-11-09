@@ -135,8 +135,23 @@ def verify_user_data(email):
     return status_response
 
 
-# Example usage
-email_from_frontend = "user@example.com"  # This is the email input from the frontend
+def sucess_bank_statement_fallback(email, bank_name):
+    """
+    update the fallback CSV after successfully verifying bank statement.
+    """
+    # Here you can add more specific checks for the bank statement if needed
+    update_fallback_csv(email, "success", f"Bank statement from {bank_name} verified.", "")
+    return {"status": "success", "message": f"Bank statement from {bank_name} verified."}
 
-result = verify_user_data(email_from_frontend)
-print(result)
+def invalid_bank_statement_fallback(email):
+    """
+    update the fallback CSV if there is an error on verifying bank statement.
+    """
+    update_fallback_csv(email, "failure", "Error verifying bank statement.", "rejected")
+    return {"status": "failure", "message": "Error verifying bank statement."}
+
+# Example usage
+# email_from_frontend = "user@example.com"  # This is the email input from the frontend
+
+# result = verify_user_data(email_from_frontend)
+# print(result)
