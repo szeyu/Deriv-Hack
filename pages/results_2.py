@@ -86,7 +86,6 @@ def show():
                         st.rerun()
                     else:
                         bank_name = highest_similarity_file.split('.')[0].capitalize()
-                        st.success(f"✅ Bank Statement Verification Successful!")
                         st.info(f"The uploaded document appears to be from {bank_name}.")
                         sucess_bank_statement_fallback(st.session_state.user_email, bank_name)  # Update fallback CSV
                         time.sleep(2)  # Short delay for UI smoothness

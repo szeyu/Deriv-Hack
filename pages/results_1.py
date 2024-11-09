@@ -10,11 +10,11 @@ from PIL import Image
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from utils.verify import verify_user_data
-
+from utils.document_similarity import compare_images
 
 def show():
     if st.session_state.uploaded_file is None:
-        st.session_state.page = "passport"
+        st.session_state.page = "identity"
         st.rerun()
 
     st.markdown(
@@ -53,7 +53,7 @@ def show():
     )
 
     st.markdown(
-        "<h1 style='text-align: center;'>Passport Verification Results</h1>",
+        "<h1 style='text-align: center;'>Identity Verification Results</h1>",
         unsafe_allow_html=True,
     )
 
@@ -63,18 +63,34 @@ def show():
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if not st.session_state["verification_complete"]:
-            with st.spinner("Verifying passport..."):
+            with st.spinner("Verifying identity..."):
                 # Create a temporary directory
                 temp_dir = tempfile.mkdtemp()
                 try:
                     # Save the upscaled image as PNG
-                    png_path = os.path.join(temp_dir, "passport.png")
+                    png_path = os.path.join(temp_dir, "identity.png")
                     nparr = np.frombuffer(st.session_state.upscaled_image, np.uint8)
                     img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
                     cv2.imwrite(png_path, img_np)
+                    
+                    # Compare the identity document with other identity documents
+                    highest_similarity_file, highest_similarity = compare_images(png_path)
+
+                    if highest_similarity < 0.7: # Threshold for similarity (adjust as needed)
+                        st.error("❌ Verification Failed: The uploaded identity document does not match any known identity documents")
+                        time.sleep(3)  # Short delay for UI smoothness
+                        st.session_state.uploaded_file = None
+                        st.session_state.upscaled = False
+                        st.session_state.verification_complete = False
+                        st.session_state.page = "identity"
+                        st.rerun()
+                    else:
+                        identityDoc = highest_similarity_file.split('.')[0].capitalize()
+                        st.info(f"The uploaded document appears to be from {identityDoc}.")  # Update fallback CSV
+                        time.sleep(2)  # Short delay for UI smoothness
 
                     # Convert PNG to PDF
-                    pdf_path = os.path.join(temp_dir, "passport.pdf")
+                    pdf_path = os.path.join(temp_dir, "identity.pdf")
                     print(pdf_path)
                     img = Image.open(png_path)
                     img_width, img_height = img.size
@@ -87,7 +103,7 @@ def show():
 
                     # Call zerox_model to extract information
                     custom_prompt = """
-Extract the following information from the passport image and format it as a JSON object within triple backticks. Use the following keys: full_name, DOB, nationality, expiry_date. If any field is not found or unclear, use <NULL> as the value.
+Extract the following information from the identity image and format it as a JSON object within triple backticks. Use the following keys: full_name, DOB, nationality, expiry_date. If any field is not found or unclear, use <NULL> as the value.
 
 Example format:
 ```json
@@ -99,12 +115,32 @@ Example format:
 }
 ```
 """
+                    # have a specific prompt for IC and driving licencemalaysia
+                    if identityDoc == "identificationcardmalaysia" or identityDoc == "drivinglicencemalaysia":
+                        custom_prompt = """
+Extract the following information from the identity image and format it as a JSON object within triple backticks. Use the following keys: full_name, DOB, nationality, expiry_date. If any field is not found or unclear, use <NULL> as the value.
+you will see the following fields:
+The Malaysian MyKad number follows a specific format: YYMMDD-PB-###G.
+
+YYMMDD: The first 6 digits represent the individual's date of birth in the format year (YY), month (MM), and day (DD). For example, "940815" indicates August 15, 1994.
+for DOB, you should use the format "YYYY-MM-DD"
+Example format:
+```json
+{
+    "full_name": "John Doe",
+    "DOB": "1990-01-01",
+    "nationality": "MALAYSIA",
+    "expiry_date": "2030-12-31"
+}
+```
+"""
+
                     result = asyncio.run(
                         zerox_model(pdf_path, custom_system_prompt=custom_prompt)
                     )
 
                     # Store the result in session state
-                    st.session_state.passport_info = result
+                    st.session_state.identity_info = result
 
                     # Retrieve user email from session state
                     user_email = st.session_state.get("user_email", None)
@@ -147,7 +183,7 @@ Example format:
 
         # Display verification results based on the verification_status
         if st.session_state.get("verification_status") == "success":
-            st.success("✅ Passport Verification Successful!")
+            st.success("✅ Identity Verification Successful!")
             st.markdown(st.session_state.verification_message)
             st.markdown("### Next Steps")
             st.markdown("Please proceed to upload your bank statement.")
@@ -159,11 +195,11 @@ Example format:
                 st.rerun()
         elif st.session_state.get("verification_status") == "failure":
             st.error(
-                f"❌ Passport Verification Failed: {st.session_state.verification_message}"
+                f"❌ Indentity Verification Failed: {st.session_state.verification_message}"
             )
             st.warning(f"**Alert:** {st.session_state.verification_alert}")
             st.markdown("### Next Steps")
-            st.markdown("Please contact support or try submitting your passport again.")
+            st.markdown("Please contact support or try submitting your Identity again.")
             if st.button("← Start New Verification"):
                 st.session_state.uploaded_file = None
                 st.session_state.upscaled = False
