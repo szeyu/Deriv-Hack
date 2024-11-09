@@ -1,5 +1,7 @@
 import streamlit as st
-
+import tempfile
+import os
+from utils.pdf_to_png import pdf_to_png
 
 def show():
     st.markdown(
@@ -70,16 +72,40 @@ def show():
         )
 
         if uploaded_file is not None:
-            st.session_state.uploaded_file = uploaded_file
+            file_extension = os.path.splitext(uploaded_file.name)[1].lower()
+
+            if file_extension == '.pdf':
+                # Create a temporary directory to store PNG images
+                with tempfile.TemporaryDirectory() as temp_dir:
+                    # Save the uploaded PDF to a temporary file
+                    temp_pdf_path = os.path.join(temp_dir, "temp.pdf")
+                    with open(temp_pdf_path, "wb") as f:
+                        f.write(uploaded_file.getvalue())
+
+                    # Convert PDF to PNG
+                    pdf_to_png(temp_pdf_path, temp_dir)
+
+                    # Get the first PNG image (assuming single-page statement)
+                    png_files = [f for f in os.listdir(temp_dir) if f.endswith('.png')]
+                    if png_files:
+                        png_path = os.path.join(temp_dir, png_files[0])
+                        with open(png_path, "rb") as f:
+                            st.session_state.uploaded_file = f.read()
+                    else:
+                        st.error("Failed to convert PDF to PNG.")
+                        return
+            else:
+                # For image uploads, just read the file
+                st.session_state.uploaded_file = uploaded_file.getvalue()
 
             col1, col2, col3 = st.columns([1, 1, 1])
             with col2:
                 st.markdown(
                     '<div class="fixed-height-container">', unsafe_allow_html=True
                 )
-                st.image(uploaded_file, caption="Bank Statement", width=300)
+                st.image(st.session_state.uploaded_file, caption="Bank Statement", width=300)
                 st.markdown("</div>", unsafe_allow_html=True)
                 if st.button("Next →"):
                     st.session_state.page = "upscale_2"
-                    st.experimental_rerun()
+                    st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)

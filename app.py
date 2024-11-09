@@ -27,9 +27,6 @@ if "upscaled" not in st.session_state:
 
 # Main app logic
 def main():
-    # logging.basicConfig(level=logging.INFO)
-    # st.title('PDF to PNG Converter')
-
     # uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
     
     # if uploaded_file is not None:

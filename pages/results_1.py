@@ -5,7 +5,7 @@ import time
 def show():
     if st.session_state.uploaded_file is None:
         st.session_state.page = "passport"
-        st.experimental_rerun()
+        st.rerun()
 
     st.markdown(
         """
@@ -60,9 +60,9 @@ def show():
 
             with st.spinner("Verifying passport..."):
                 time.sleep(5)
-            st.session_state[verification_key] = True
-            st.experimental_rerun()
-        else:
+            st.session_state.verification_complete = True
+            st.rerun()
+
             st.success("✅ Passport Verification Successful!")
 
             st.markdown("### Verification Details")
@@ -74,9 +74,9 @@ def show():
             st.markdown("### Next Steps")
             st.markdown("Please proceed to upload your bank statement.")
 
-            if st.button("Continue to Bank Statement →"):
-                st.session_state.uploaded_file = None
-                st.session_state.upscaled = False
-                st.session_state.verification_complete = False
-                st.session_state.page = "bank_statement"
-                st.experimental_rerun()
+        if st.button("Continue to Bank Statement →"):
+            st.session_state.uploaded_file = None
+            st.session_state.upscaled = False
+            st.session_state.verification_complete = False
+            st.session_state.page = "bank_statement"
+            st.rerun()
