@@ -81,5 +81,5 @@ def show():
                 st.markdown("</div>", unsafe_allow_html=True)
                 if st.button("Next →"):
                     st.session_state.page = "upscale_1"
-                    st.experimental_rerun()
+                    st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
