@@ -49,3 +49,4 @@ def save_data_to_fallback_csv():
     print("Data saved successfully to fallback.csv!")
 
 
+save_data_to_fallback_csv()
