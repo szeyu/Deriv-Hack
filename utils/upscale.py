@@ -2,7 +2,9 @@ import numpy as np
 import cv2
 import math
 
-def nearestNeighboor(img, scale):
+def nearestNeighboor(image, scale):
+    img = cv2.imread(image)
+    height, width, _ = img.shape
     resizedHeight = height * scale
     resizedWidth = width * scale
     resized = np.zeros((resizedHeight, resizedWidth, 3), np.uint8)
@@ -16,12 +18,3 @@ def nearestNeighboor(img, scale):
     return resized
 
 
-image = "6150091700278772913.jpg" 
-scale = 2  
-
-img = cv2.imread(image)
-height, width, _ = img.shape
-
-def main():
-    resized = nearestNeighboor(img, scale)
-    cv2.imwrite("new_" + image, resized)  

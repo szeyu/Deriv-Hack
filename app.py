@@ -4,6 +4,7 @@ import logging
 import asyncio
 import os
 from utils.pdf_to_png import pdf_to_png
+from utils.upscale import nearestNeighboor
 
 def main():
     logging.basicConfig(level=logging.INFO)
@@ -28,7 +29,10 @@ def main():
             for file_name in sorted(os.listdir(output_folder)):
                 if file_name.endswith(".png"):
                     image_path = os.path.join(output_folder, file_name)
-                    st.image(image_path, caption=file_name)
+                    # st.image(image_path, caption=file_name)
+                    resized = nearestNeighboor(image_path, 1.5)
+                    st.image(resized, caption= file_name) 
+                    st.success("Upscaling completed!")
             
 if __name__ == "__main__":
     main()
