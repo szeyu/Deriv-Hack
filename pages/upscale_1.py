@@ -4,18 +4,9 @@ import time
 
 def show():
     if st.session_state.uploaded_file is None:
-        st.session_state.page = "upload"
+        st.session_state.page = "passport"
         st.experimental_rerun()
 
-    st.markdown(
-        "<h1 style='text-align: center;'>Image Upscaling</h1>", unsafe_allow_html=True
-    )
-    st.markdown(
-        "<p style='text-align: center; color: #4A90E2;'>Enhancing image clarity for better verification</p>",
-        unsafe_allow_html=True,
-    )
-
-    # Custom button styling
     st.markdown(
         """
     <style>
@@ -34,8 +25,23 @@ def show():
             background-color: white;
             color: #4A90E2;
         }
+        .stButton > button:active, .stButton > button:focus {
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            outline: none;
+        }
     </style>
     """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        "<h1 style='text-align: center;'>Passport Image Enhancement</h1>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "<p style='text-align: center; color: #4A90E2;'>Enhancing passport image for better verification</p>",
         unsafe_allow_html=True,
     )
 
@@ -50,28 +56,27 @@ def show():
 
     with col2:
         st.markdown(
-            "<h3 style='text-align: center; color: #B0B0B0;'>Upscaled Image</h3>",
+            "<h3 style='text-align: center; color: #B0B0B0;'>Enhanced Image</h3>",
             unsafe_allow_html=True,
         )
         if not st.session_state.get("upscaled", False):
-            if st.button("Upscale Image"):
-                with st.spinner("Upscaling image..."):
-                    time.sleep(5)  # Simulate processing
+            if st.button("Enhance Image"):
+                with st.spinner("Enhancing passport image..."):
+                    time.sleep(5)
                 st.session_state.upscaled = True
                 st.experimental_rerun()
         else:
             st.image(st.session_state.uploaded_file, use_column_width=True)
 
-    # Navigation buttons
     if st.session_state.upscaled:
         st.markdown("<br>", unsafe_allow_html=True)
         col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
         with col2:
             if st.button("← Back"):
                 st.session_state.upscaled = False
-                st.session_state.page = "upload"
+                st.session_state.page = "passport"
                 st.experimental_rerun()
         with col3:
             if st.button("Verify →"):
-                st.session_state.page = "results"
-                st.rerun()
+                st.session_state.page = "results_1"
+                st.experimental_rerun()

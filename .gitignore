@@ -1,5 +1,4 @@
-<<<<<<< Updated upstream
 .env
-=======
 myenv/
->>>>>>> Stashed changes
+__pycache__/
+pages/*.pyc

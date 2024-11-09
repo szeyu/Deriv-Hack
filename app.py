@@ -1,40 +1,17 @@
-<<<<<<< Updated upstream
-import tempfile
 import streamlit as st
-import logging
-import asyncio
-# from docling import docling
-from zerox_model import zerox_model
-
-def main():
-    logging.basicConfig(level=logging.INFO)
-    st.title('PDF to JSON Converter')
-    
-    uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
-    if uploaded_file is not None:
-        # Write the file to a temporary location on disk
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
-            tmp_file.write(uploaded_file.getbuffer())
-            tmp_file_path = tmp_file.name
-            
-        print(tmp_file_path)
-        
-        # Process the uploaded PDF file with Docling
-        # docling(tmp_file_path)
-        
-        # Process the uploaded PDF file with ZeroX
-        asyncio.run(zerox_model(tmp_file_path))
-        
-=======
-import streamlit as st
-from pages import upload, upscale, results
+from pages import passport, upscale_1, results_1, bank_statement, upscale_2, results_2
 import time
 
-st.set_page_config(page_title="SwiftAuth", page_icon="🔐", layout="wide")
+st.set_page_config(
+    page_title="SwiftAuth",
+    page_icon="🔐",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
 
 # Initialize session state
 if "page" not in st.session_state:
-    st.session_state.page = "upload"
+    st.session_state.page = "passport"
 if "uploaded_file" not in st.session_state:
     st.session_state.uploaded_file = None
 if "upscaled" not in st.session_state:
@@ -43,24 +20,31 @@ if "upscaled" not in st.session_state:
 
 # Main app logic
 def main():
-    if st.session_state.page == "upload":
-        upload.show()
-    elif st.session_state.page == "upscale":
-        upscale.show()
-    elif st.session_state.page == "results":
-        results.show()
+    if st.session_state.page == "passport":
+        passport.show()
+    elif st.session_state.page == "upscale_1":
+        upscale_1.show()
+    elif st.session_state.page == "results_1":
+        results_1.show()
+    elif st.session_state.page == "bank_statement":
+        bank_statement.show()
+    elif st.session_state.page == "upscale_2":
+        upscale_2.show()
+    elif st.session_state.page == "results_2":
+        results_2.show()
 
     # Footer with dark theme
     st.markdown(
         """
-    <div style='position: fixed; bottom: 0; width: 100%; text-align: center; padding: 8px; background-color: #1E1E1E;'>
-        <p style='color: #888888; font-size: 12px; margin: 0;'>© 2023 SwiftAuth v1.0.0 | Document Authentication Made Easy — Developed by John Ong from EdgeRunners</p>
+    <div style='position: fixed; left: 0; bottom: 0; width: 100%; background-color: #1E1E1E; padding: 10px 0;'>
+        <div style='max-width: 800px; margin: 0 auto; text-align: center;'>
+            <p style='color: #888888; font-size: 12px; margin: 0;'>© 2023 SwiftAuth v1.0.0 | Document Authentication Made Easy — Developed by John Ong from EdgeRunners</p>
+        </div>
     </div>
     """,
         unsafe_allow_html=True,
     )
 
->>>>>>> Stashed changes
 
 if __name__ == "__main__":
     main()
