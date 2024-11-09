@@ -1,2 +1,3 @@
-custID,email,name,address
-1,nanisim12321@gmail.com,nani sim,12321 nani sim street
+custID,email,name,address, DOB
+1,nanisim12321@gmail.com,nani sim,12321 nani sim street, 12/11/20041,xx@gmail.com,xx,xxaddress,12/11/2002
+3,hh@gmail.com,HH,hhaddres,12/12/2001
