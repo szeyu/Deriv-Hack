@@ -1,6 +1,6 @@
 {
-    "account_holder_name": "CHOR NIAGA ENTERPRISE",
-    "address": "NO 192 TAMAN BUKIT MAJU 2 , LUMUT , 32200 PERAK, MYS",
-    "account_number": "558163521047",
-    "statement_date": "30/06/23"
+    "account_holder_name": "KELVIN CHONG CHEE PANG",
+    "address": "T-04-04, JALAN SRI STULANG, 1, TAMAN SRI STULANG, 80150 JOHOR BAHRU, JOHOR",
+    "account_number": "3258953988",
+    "statement_date": "30 Apr 2022"
 }

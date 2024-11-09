@@ -9,6 +9,7 @@ from reportlab.pdfgen import canvas
 import asyncio
 from utils.zerox_model import zerox_model
 from utils.document_similarity import compare_images
+from utils.verify import sucess_bank_statement_fallback, invalid_bank_statement_fallback
 
 def show():
     if st.session_state.uploaded_file is None:
@@ -76,6 +77,7 @@ def show():
 
                     if highest_similarity < 0.85: # Threshold for similarity (adjust as needed)
                         st.error("❌ Verification Failed: The uploaded document does not match any known bank statement format.")
+                        invalid_bank_statement_fallback(st.session_state.user_email)  # Update fallback CSV
                         time.sleep(3)  # Short delay for UI smoothness
                         st.session_state.uploaded_file = None
                         st.session_state.upscaled = False
@@ -86,7 +88,8 @@ def show():
                         bank_name = highest_similarity_file.split('.')[0].capitalize()
                         st.success(f"✅ Bank Statement Verification Successful!")
                         st.info(f"The uploaded document appears to be from {bank_name}.")
-                
+                        sucess_bank_statement_fallback(st.session_state.user_email, bank_name)  # Update fallback CSV
+                        time.sleep(2)  # Short delay for UI smoothness
                     
                     # Convert PNG to PDF
                     pdf_path = os.path.join(temp_dir, "bank_statement.pdf")
@@ -112,8 +115,10 @@ Example format:
     "account_number": "XXXXXXXX1234",
     "statement_date": "31/01/2023"
 }
-""" 
-                    result = asyncio.run(zerox_model(pdf_path, custom_system_prompt=custom_prompt))
+"""
+                    result = asyncio.run(
+                        zerox_model(pdf_path, custom_system_prompt=custom_prompt)
+                    )
                     # Store the result in session state
                     st.session_state.statement_info = result
 
@@ -147,5 +152,5 @@ Example format:
             st.session_state.uploaded_file = None
             st.session_state.upscaled = False
             st.session_state.verification_complete = False
-            st.session_state.page = "passport"
+            st.session_state.page = "login"
             st.rerun()
