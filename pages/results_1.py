@@ -63,7 +63,7 @@ def show():
             st.session_state.verification_complete = True
             st.rerun()
 
-        st.success("✅ Passport Verification Successful!")
+            st.success("✅ Passport Verification Successful!")
 
             st.markdown("### Verification Details")
             st.markdown("✓ Passport Type: Valid")

@@ -62,7 +62,7 @@ def show():
             st.session_state.verification_complete = True
             st.rerun()
 
-        st.success("✅ Bank Statement Verification Successful!")
+            st.success("✅ Bank Statement Verification Successful!")
 
             st.markdown("### Verification Details")
             st.markdown("✓ Statement Type: Valid")
