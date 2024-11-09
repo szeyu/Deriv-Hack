@@ -31,6 +31,12 @@ def show():
             border: none;
             outline: none;
         }
+        div.stSpinner > div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
     </style>
     """,
         unsafe_allow_html=True,
@@ -41,28 +47,35 @@ def show():
         unsafe_allow_html=True,
     )
 
+    # Unique session state key for this page
+    verification_key = "results_2_verification_complete"
+
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if "verification_complete" not in st.session_state:
+        if not st.session_state.get(verification_key, False):
+            # Clear previous page's session state if exists
+            if "verification_complete" in st.session_state:
+                del st.session_state.verification_complete
+
             with st.spinner("Verifying bank statement..."):
                 time.sleep(5)
-            st.session_state.verification_complete = True
+            st.session_state[verification_key] = True
             st.experimental_rerun()
+        else:
+            st.success("✅ Bank Statement Verification Successful!")
 
-        st.success("✅ Bank Statement Verification Successful!")
+            st.markdown("### Verification Details")
+            st.markdown("✓ Statement Type: Valid")
+            st.markdown("✓ Bank Details: Verified")
+            st.markdown("✓ Statement Period: Valid")
+            st.markdown("✓ Last Verified: Just now")
 
-        st.markdown("### Verification Details")
-        st.markdown("✓ Statement Type: Valid")
-        st.markdown("✓ Bank Details: Verified")
-        st.markdown("✓ Statement Period: Valid")
-        st.markdown("✓ Last Verified: Just now")
+            st.markdown("### Verification Complete")
+            st.markdown("Thank you for completing the verification process.")
 
-        st.markdown("### Verification Complete")
-        st.markdown("Thank you for completing the verification process.")
-
-        if st.button("← Start New Verification"):
-            st.session_state.uploaded_file = None
-            st.session_state.upscaled = False
-            st.session_state.verification_complete = False
-            st.session_state.page = "passport"
-            st.experimental_rerun()
+            if st.button("← Start New Verification"):
+                st.session_state.uploaded_file = None
+                st.session_state.upscaled = False
+                st.session_state.verification_complete = False
+                st.session_state.page = "passport"
+                st.experimental_rerun()
