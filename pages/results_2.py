@@ -68,8 +68,8 @@ def show():
                     png_path = os.path.join(temp_dir, "bank_statement.png")
                     nparr = np.frombuffer(st.session_state.upscaled_image, np.uint8)
                     img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-                    cv2.imwrite(png_path, img_np)
-
+                    cv2.imwrite(png_path, img_np)                    
+                    
                     # Convert PNG to PDF
                     pdf_path = os.path.join(temp_dir, "bank_statement.pdf")
                     print(pdf_path)
