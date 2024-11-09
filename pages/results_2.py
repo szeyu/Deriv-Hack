@@ -9,7 +9,12 @@ from reportlab.pdfgen import canvas
 import asyncio
 from utils.zerox_model import zerox_model
 from utils.document_similarity import compare_images
-from utils.verify import sucess_bank_statement_fallback, invalid_bank_statement_fallback
+from utils.verify import (
+    verify_user_data_2,
+    sucess_bank_statement_fallback,
+    invalid_bank_statement_fallback,
+)
+
 
 def show():
     if st.session_state.uploaded_file is None:
@@ -71,25 +76,39 @@ def show():
                     nparr = np.frombuffer(st.session_state.upscaled_image, np.uint8)
                     img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
                     cv2.imwrite(png_path, img_np)
-                    
-                    # Compare the bank statement with other bank statements
-                    highest_similarity_file, highest_similarity = compare_images(png_path)
 
-                    if highest_similarity < 0.85: # Threshold for similarity (adjust as needed)
-                        st.error("❌ Verification Failed: The uploaded document does not match any known bank statement format.")
-                        invalid_bank_statement_fallback(st.session_state.user_email)  # Update fallback CSV
+                    # Compare the bank statement with other bank statements
+                    highest_similarity_file, highest_similarity = compare_images(
+                        png_path
+                    )
+
+                    if (
+                        highest_similarity < 0.85
+                    ):  # Threshold for similarity (adjust as needed)
+                        st.error(
+                            "❌ Verification Failed: The uploaded document does not match any known bank statement format."
+                        )
+                        invalid_bank_statement_fallback(
+                            st.session_state.user_email
+                        )  # Update fallback CSV
                         time.sleep(3)  # Short delay for UI smoothness
                         st.session_state.uploaded_file = None
                         st.session_state.upscaled = False
                         st.session_state.verification_complete = False
-                        st.session_state.page = "passport"
+                        st.session_state.page = "login"
                         st.rerun()
                     else:
-                        bank_name = highest_similarity_file.split('.')[0].capitalize()
-                        st.info(f"The uploaded document appears to be from {bank_name}.")
-                        sucess_bank_statement_fallback(st.session_state.user_email, bank_name)  # Update fallback CSV
+                        bank_name = highest_similarity_file.split(".")[0].capitalize()
+                        st.success(f"✅ Bank Statement Verification Successful!")
+                        st.info(
+                            f"The uploaded document appears to be from {bank_name}."
+                        )
+                        sucess_bank_statement_fallback(
+                            st.session_state.user_email, bank_name
+                        )  # Update fallback CSV
+
                         time.sleep(2)  # Short delay for UI smoothness
-                    
+
                     # Convert PNG to PDF
                     pdf_path = os.path.join(temp_dir, "bank_statement.pdf")
                     print(pdf_path)
@@ -121,6 +140,30 @@ Example format:
                     # Store the result in session state
                     st.session_state.statement_info = result
 
+                    # Retrieve user email from session state
+                    user_email = st.session_state.get("user_email", None)
+                    if user_email is None:
+                        st.error("User email not found. Please log in again.")
+                        st.session_state.page = "login"
+                        st.rerun()
+
+                    # Verify user data against the database
+                    verification_result = verify_user_data_2(user_email)
+
+                    if verification_result["status"] == "success":
+                        st.session_state.bank_verification_status = "success"
+                        st.session_state.bank_verification_message = (
+                            verification_result["message"]
+                        )
+                    else:
+                        st.session_state.bank_verification_status = "failure"
+                        st.session_state.bank_verification_message = (
+                            verification_result["message"]
+                        )
+                        st.session_state.bank_verification_alert = (
+                            verification_result.get("alert", "")
+                        )
+
                     time.sleep(2)  # Short delay for UI smoothness
                 finally:
                     # Clean up temporary files
@@ -136,20 +179,32 @@ Example format:
             st.session_state.verification_complete = True
             st.rerun()
 
-        st.success("✅ Bank Statement Verification Successful!")
+        # Update the display section
+        if st.session_state.get("bank_verification_status") == "success":
+            st.success("✅ Bank Statement Verification Successful!")
+            st.markdown(st.session_state.bank_verification_message)
+            st.markdown("### Verification Complete")
+            st.markdown("Thank you for completing the verification process.")
+        elif st.session_state.get("bank_verification_status") == "failure":
+            st.error(
+                f"❌ Bank Statement Verification Failed: {st.session_state.bank_verification_message}"
+            )
+            if st.session_state.get("bank_verification_alert"):
+                st.warning(f"**Alert:** {st.session_state.bank_verification_alert}")
+            st.markdown("### Next Steps")
+            st.markdown(
+                "Please contact support or try submitting your bank statement again."
+            )
 
-        st.markdown("### Verification Details")
-        st.markdown("✓ Statement Type: Valid")
-        st.markdown("✓ Bank Details: Verified")
-        st.markdown("✓ Statement Period: Valid")
-        st.markdown("✓ Last Verified: Just now")
-
-        st.markdown("### Verification Complete")
-        st.markdown("Thank you for completing the verification process.")
-
+        # Reset button
         if st.button("← Start New Verification"):
+            # Reset all relevant session states
             st.session_state.uploaded_file = None
             st.session_state.upscaled = False
             st.session_state.verification_complete = False
+            st.session_state.bank_verification_status = None
+            st.session_state.bank_verification_message = None
+            st.session_state.bank_verification_alert = None
+            st.session_state.statement_info = None
             st.session_state.page = "login"
             st.rerun()

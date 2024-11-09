@@ -136,13 +136,88 @@ def verify_user_data(email):
     return status_response
 
 
+def verify_user_data_2(email):
+    """
+    Verify bank statement data against customer database.
+    """
+    bank_statement_md_path = "output_test/bank_statement.md"
+    customer_data_path = "data/customer_data.csv"
+
+    # Extract JSON data from bank statement
+    json_data = extract_json_from_md(bank_statement_md_path)
+    if not json_data:
+        update_fallback_csv(
+            email, "failure", "Failed to extract data from bank statement.", "rejected"
+        )
+        return {
+            "status": "failure",
+            "message": "Failed to extract data from bank statement.",
+        }
+
+    # Load customer data
+    try:
+        customer_df = pd.read_csv(customer_data_path)
+    except Exception as e:
+        print(f"Error loading customer data: {e}")
+        update_fallback_csv(
+            email, "failure", "Customer database inaccessible.", "rejected"
+        )
+        return {"status": "failure", "message": "Customer database inaccessible."}
+
+    # Check if customer exists
+    customer = customer_df.loc[customer_df["Email"] == email]
+    if customer.empty:
+        update_fallback_csv(
+            email, "failure", "Email not found in database.", "rejected"
+        )
+        return {"status": "failure", "message": "Email not found in database."}
+
+    customer_info = customer.iloc[0]
+
+    # Compare account holder name
+    if (
+        json_data.get("account_holder_name", "").strip().lower()
+        != customer_info["Name"].strip().lower()
+    ):
+        update_fallback_csv(
+            email, "failure", "Account holder name does not match.", "Suspicious"
+        )
+        return {
+            "status": "failure",
+            "message": "Account holder name does not match.",
+            "alert": "Suspicious",
+        }
+
+    # Compare address
+    if (
+        json_data.get("address", "").strip().lower()
+        != customer_info["Address"].strip().lower()
+    ):
+        update_fallback_csv(email, "failure", "Address does not match.", "Suspicious")
+        return {
+            "status": "failure",
+            "message": "Address does not match.",
+            "alert": "Rejected (Contact Support to update address)",
+        }
+
+    # If all checks pass
+    update_fallback_csv(email, "success", "Bank statement verified successfully.", "")
+    return {"status": "success", "message": "Bank statement verified successfully."}
+
+
 def sucess_bank_statement_fallback(email, bank_name):
     """
     update the fallback CSV after successfully verifying bank statement.
     """
     # Here you can add more specific checks for the bank statement if needed
-    update_fallback_csv(email, "success", f"Bank statement from {bank_name} verified.", "")
-    return {"status": "success", "message": f"Bank statement from {bank_name} verified."}
+    update_fallback_csv(
+        email, "success", f"Bank statement from {bank_name} verified.", ""
+    )
+    return {
+        "status": "success",
+        "message": f"Bank statement from {bank_name} verified.",
+    }
+
 
 def invalid_bank_statement_fallback(email):
     """
@@ -150,6 +225,7 @@ def invalid_bank_statement_fallback(email):
     """
     update_fallback_csv(email, "failure", "Error verifying bank statement.", "rejected")
     return {"status": "failure", "message": "Error verifying bank statement."}
+
 
 # Example usage
 # email_from_frontend = "user@example.com"  # This is the email input from the frontend
