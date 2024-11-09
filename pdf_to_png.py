@@ -1,4 +1,4 @@
-import               fitz
+import fitz
 import os
 
 # Function to convert PDF to PNG
