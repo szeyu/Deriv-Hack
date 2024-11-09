@@ -6,12 +6,6 @@ import streamlit as st
 # Load environment variables from .env file
 load_dotenv()
 
-# placeholder for additional model kwargs which might be required for some models
-kwargs = {}
-
-# system prompt to use for the vision model
-custom_system_prompt = None
-
 ###################### Example for OpenAI ######################
 model = "gpt-4o-mini"  # openai model
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")  # Load API key from .env file
@@ -20,7 +14,7 @@ os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")  # Load API key from 
 # model = "gemini/gpt-4o-mini" ## "gemini/<gemini_model>" -> format <provider>/<model>
 # os.environ['GEMINI_API_KEY'] = "" # your-gemini-api-key
 
-async def zerox_model(input_doc_path):
+async def zerox_model(input_doc_path, custom_system_prompt=None, kwargs={}):
     # process only some pages or all
     select_pages = None  # None for all, but could be int or list(int) page numbers (1 indexed)
 
