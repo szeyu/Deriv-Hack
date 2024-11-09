@@ -101,5 +101,6 @@ def show():
                 st.rerun()
         with col3:
             if st.button("Verify Identity →"):
-                st.session_state.page = "selfie"
+                # st.session_state.page = "selfie"
+                st.session_state.page = "results_1"
                 st.rerun()
