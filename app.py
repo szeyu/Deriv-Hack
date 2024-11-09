@@ -3,7 +3,7 @@ import streamlit as st
 import logging
 import asyncio
 
-from pages import passport, upscale_1, results_1, bank_statement, upscale_2, results_2
+from pages import passport, upscale_1, results_1, bank_statement, upscale_2, results_2, selfie
 import time
 
 st.set_page_config(
@@ -20,6 +20,10 @@ if "uploaded_file" not in st.session_state:
     st.session_state.uploaded_file = None
 if "upscaled" not in st.session_state:
     st.session_state.upscaled = False
+if "selfied" not in st.session_state:
+    st.session_state.selfied = False
+if "captured_image" not in st.session_state:
+    st.session_state.captured_image = None
 if "passport_info" not in st.session_state:
     st.session_state.passport_info = ""
 if "statement_info" not in st.session_state:
@@ -34,6 +38,8 @@ def main():
         passport.show()
     elif st.session_state.page == "upscale_1":
         upscale_1.show()
+    elif st.session_state.page == "selfie":
+        selfie.show()
     elif st.session_state.page == "results_1":
         results_1.show()
     elif st.session_state.page == "bank_statement":
