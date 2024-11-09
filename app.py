@@ -22,7 +22,10 @@ if "upscaled" not in st.session_state:
     st.session_state.upscaled = False
 if "passport_info" not in st.session_state:
     st.session_state.passport_info = ""
-
+if "statement_info" not in st.session_state:
+    st.session_state.statement_info = ""
+if "verification_complete" not in st.session_state:
+    st.session_state.verification_complete = False
 
 # Main app logic
 def main():
