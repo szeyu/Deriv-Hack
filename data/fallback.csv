@@ -1,6 +1,11 @@
 Email,Status,Message,Alert
-user1@example.com,Success,Passport verified successfully, 
-user2@example.com,Failed,Passport name mismatch,Suspicious
-user3@example.com,Failed,Passport expired,Banned
-user@example.com,failure,Email not found in database.,rejected
+user@example.com,success,Passport name matches & age requirements met., 
+user1@example.com,failure,Passport name mismatch,Suspicious
+user2@example.com,Failed,Does not meet age requirement.,rejected
+user3@example.com,failure,Email not found in database.,rejected
+user4@example.com,success,Bank statement from MAYBANK verified.,
+user5@example.com,failure,Error verifying bank statement.,Suspicious
+user6@example.com,failure,Bank statement verified successfully.,Suspicious
+user7@example.com,failure,Account holder name does not match.,Suspicious
+user8@example.com,failure,Address does not match.,Suspicious
 szeyusim@gmail.com,success,Bank statement from Publicbank verified.,

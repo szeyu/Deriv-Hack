@@ -96,10 +96,13 @@ def verify_user_data(email):
         == customer_info["Name"].strip().lower()
     ):
         update_fallback_csv(email, "success", "Name matches.", "")
-        status_response = {"status": "success", "message": "Name matches."}
+        status_response = {
+            "status": "success",
+            "message": "Passport name matches & age requirements met.",
+        }
     else:
-        update_fallback_csv(email, "failure", "Name does not match.", "Suspicious")
-        return {"status": "failure", "message": "Name does not match."}
+        update_fallback_csv(email, "failure", "Passport name mismatch.", "Suspicious")
+        return {"status": "failure", "message": "Passport name mismatch.."}
 
     # 2. Check identity expiry date
     try:
@@ -115,7 +118,7 @@ def verify_user_data(email):
     except ValueError:
         # update_fallback_csv(email, "failure", "Invalid expiry date format.", "rejected")
         # return {"status": "failure", "message": "Invalid expiry date format."}
-        pass # Ignore invalid expiry date format
+        pass  # Ignore invalid expiry date format
 
     # 3. Calculate age
     try:
@@ -193,7 +196,7 @@ def verify_user_data_2(email):
         json_data.get("address", "").strip().lower()
         != customer_info["Address"].strip().lower()
     ):
-        update_fallback_csv(email, "failure", "Address does not match.", "Suspicious")
+        update_fallback_csv(email, "failure", "Address does not match.", "Rejected (Contact Support to update address)")
         return {
             "status": "failure",
             "message": "Address does not match.",
@@ -223,7 +226,7 @@ def invalid_bank_statement_fallback(email):
     """
     update the fallback CSV if there is an error on verifying bank statement.
     """
-    update_fallback_csv(email, "failure", "Error verifying bank statement.", "rejected")
+    update_fallback_csv(email, "failure", "Error verifying bank statement.", "Suspicious")
     return {"status": "failure", "message": "Error verifying bank statement."}
 
 
