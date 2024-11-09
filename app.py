@@ -3,7 +3,7 @@ import streamlit as st
 import logging
 import asyncio
 import os
-from pdf_to_png import pdf_to_png  # Import your pdf_to_png function
+from pdf_to_png import pdf_to_png
 
 def main():
     logging.basicConfig(level=logging.INFO)
