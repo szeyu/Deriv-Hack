@@ -52,26 +52,22 @@ def show():
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if not st.session_state.get(verification_key, False):
-            # Clear previous page's session state if exists
-            if "verification_complete" in st.session_state:
-                del st.session_state.verification_complete
-
+        if "verification_complete" not in st.session_state:
             with st.spinner("Verifying bank statement..."):
                 time.sleep(5)
             st.session_state.verification_complete = True
             st.rerun()
 
-            st.success("✅ Bank Statement Verification Successful!")
+        st.success("✅ Bank Statement Verification Successful!")
 
-            st.markdown("### Verification Details")
-            st.markdown("✓ Statement Type: Valid")
-            st.markdown("✓ Bank Details: Verified")
-            st.markdown("✓ Statement Period: Valid")
-            st.markdown("✓ Last Verified: Just now")
+        st.markdown("### Verification Details")
+        st.markdown("✓ Statement Type: Valid")
+        st.markdown("✓ Bank Details: Verified")
+        st.markdown("✓ Statement Period: Valid")
+        st.markdown("✓ Last Verified: Just now")
 
-            st.markdown("### Verification Complete")
-            st.markdown("Thank you for completing the verification process.")
+        st.markdown("### Verification Complete")
+        st.markdown("Thank you for completing the verification process.")
 
         if st.button("← Start New Verification"):
             st.session_state.uploaded_file = None
