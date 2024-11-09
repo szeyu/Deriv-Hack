@@ -84,7 +84,19 @@ def show():
                     img.close()
 
                     # Call zerox_model to extract information
-                    custom_prompt = "Extract the following information from the passport image: Full Name, Date of Birth, Nationality, and Expiry Date."
+                    custom_prompt = """
+Extract the following information from the passport image and format it as a JSON object within triple backticks. Use the following keys: full_name, DOB, nationality, expiry_date. If any field is not found or unclear, use <NULL> as the value.
+
+Example format:
+```json
+{
+    "full_name": "John Doe",
+    "DOB": "1990-01-01",
+    "nationality": "MALAYSIA",
+    "expiry_date": "2030-12-31"
+}
+```
+"""
                     result = asyncio.run(zerox_model(pdf_path, custom_system_prompt=custom_prompt))
 
                     # Store the result in session state
@@ -112,9 +124,6 @@ def show():
         st.markdown("✓ MRZ Check: Passed")
         st.markdown("✓ Security Features: Verified")
         st.markdown("✓ Last Verified: Just now")
-
-        st.markdown("### Extracted Information")
-        st.markdown(st.session_state.passport_info)
 
         st.markdown("### Next Steps")
         st.markdown("Please proceed to upload your bank statement.")
