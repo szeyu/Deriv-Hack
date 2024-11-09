@@ -16,6 +16,10 @@ def compare_images(uploaded_image_path):
             similarity = np.dot(vector1, vector2) / (np.linalg.norm(vector1) * np.linalg.norm(vector2))
             similarities[filename] = similarity
 
+    print("Similarities:")
+    for key, value in similarities.items():
+        print(f"{key}: {value:.3f}")
+
     highest_similarity_file = max(similarities, key=similarities.get)
     highest_similarity = similarities[highest_similarity_file]
 

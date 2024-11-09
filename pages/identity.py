@@ -54,15 +54,15 @@ def show():
             unsafe_allow_html=True,
         )
         st.markdown(
-            "<h3 style='text-align: center; color: #4A90E2; margin-top: 0;'>Passport Verification</h3>",
+            "<h3 style='text-align: center; color: #4A90E2; margin-top: 0;'>Identity Verification</h3>",
             unsafe_allow_html=True,
         )
 
         st.markdown(
             """
         <div style='text-align: center; padding: 8px; background-color: #2E2E2E; border-radius: 10px; margin: 5px 0;'>
-            <h4 style='color: #E0E0E0; margin: 3px 0;'>Step 1: Passport Upload</h4>
-            <p style='color: #B0B0B0; margin: 3px 0;'>Please upload a clear image of your passport.</p>
+            <h4 style='color: #E0E0E0; margin: 3px 0;'>Step 1: Identity Upload</h4>
+            <p style='color: #B0B0B0; margin: 3px 0;'>Please upload a clear image of your Identity.</p>
         </div>
         """,
             unsafe_allow_html=True,
@@ -70,7 +70,7 @@ def show():
 
         st.markdown('<div class="upload-section">', unsafe_allow_html=True)
         uploaded_file = st.file_uploader(
-            "Upload passport image", type=["png", "jpg", "jpeg"]
+            "Upload Identity image", type=["png", "jpg", "jpeg"]
         )
 
         if uploaded_file is not None:
@@ -81,7 +81,7 @@ def show():
                 st.markdown(
                     '<div class="fixed-height-container">', unsafe_allow_html=True
                 )
-                st.image(uploaded_file, caption="Passport Image", width=300)
+                st.image(uploaded_file, caption="Identity Image", width=300)
                 st.markdown("</div>", unsafe_allow_html=True)
                 if st.button("Next →"):
                     st.session_state.page = "upscale_1"

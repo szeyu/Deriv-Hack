@@ -4,8 +4,8 @@ import logging
 import asyncio
 
 from pages import (
+    identity,
     login,
-    passport,
     upscale_1,
     results_1,
     bank_statement,
@@ -25,7 +25,7 @@ st.set_page_config(
 
 # Initialize session state
 if "page" not in st.session_state:
-    st.session_state.page = "passport"
+    st.session_state.page = "identity"
 if "uploaded_file" not in st.session_state:
     st.session_state.uploaded_file = None
 if "upscaled" not in st.session_state:
@@ -49,8 +49,8 @@ def main():
 
     if st.session_state.page == "login":
         login.show()
-    elif st.session_state.page == "passport":
-        passport.show()
+    elif st.session_state.page == "identity":
+        identity.show()
     elif st.session_state.page == "upscale_1":
         upscale_1.show()
     elif st.session_state.page == "selfie":

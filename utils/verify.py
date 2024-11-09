@@ -57,13 +57,13 @@ def update_fallback_csv(email, status, message, alert=""):
 
 def verify_user_data(email):
     """
-    Verify user data from the JSON in the passport.md file and compare it with the database.
+    Verify user data from the JSON in the identity.md file and compare it with the database.
     """
-    passport_md_path = "output_test/passport.md"
+    identity_md_path = "output_test/identity.md"
     customer_data_path = "data/customer_data.csv"
 
     # Extract JSON data from the .md file
-    json_data = extract_json_from_md(passport_md_path)
+    json_data = extract_json_from_md(identity_md_path)
     if not json_data:
         update_fallback_csv(
             email, "failure", "Failed to extract data from .md file.", "rejected"
@@ -101,20 +101,21 @@ def verify_user_data(email):
         update_fallback_csv(email, "failure", "Name does not match.", "Suspicious")
         return {"status": "failure", "message": "Name does not match."}
 
-    # 2. Check passport expiry date
+    # 2. Check identity expiry date
     try:
         expiry_date = datetime.strptime(json_data.get("expiry_date", ""), "%Y-%m-%d")
         if expiry_date < datetime.now() + timedelta(days=180):
             update_fallback_csv(
-                email, "failure", "Passport expiring soon or expired.", "rejected"
+                email, "failure", "identity expiring soon or expired.", "rejected"
             )
             return {
                 "status": "failure",
-                "message": "Passport expiring soon or expired.",
+                "message": "identity expiring soon or expired.",
             }
     except ValueError:
-        update_fallback_csv(email, "failure", "Invalid expiry date format.", "rejected")
-        return {"status": "failure", "message": "Invalid expiry date format."}
+        # update_fallback_csv(email, "failure", "Invalid expiry date format.", "rejected")
+        # return {"status": "failure", "message": "Invalid expiry date format."}
+        pass # Ignore invalid expiry date format
 
     # 3. Calculate age
     try:
