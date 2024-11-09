@@ -1,11 +1,15 @@
 import streamlit as st
 import time
-
+from utils.upscale import nearestNeighboor
+import tempfile
+import os
+import cv2
+import numpy as np
 
 def show():
     if st.session_state.uploaded_file is None:
         st.session_state.page = "bank_statement"
-        st.experimental_rerun()
+        st.rerun()
 
     st.markdown(
         """
@@ -52,7 +56,7 @@ def show():
             "<h3 style='text-align: center; color: #B0B0B0;'>Original Image</h3>",
             unsafe_allow_html=True,
         )
-        st.image(st.session_state.uploaded_file, use_column_width=True)
+        st.image(st.session_state.uploaded_file, use_container_width=True)
 
     with col2:
         st.markdown(
@@ -62,11 +66,34 @@ def show():
         if not st.session_state.get("upscaled", False):
             if st.button("Enhance Image"):
                 with st.spinner("Enhancing statement..."):
-                    time.sleep(5)
+                    # Create a temporary file to save the uploaded image
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp_file:
+                        tmp_file.write(st.session_state.uploaded_file)
+                        tmp_file_path = tmp_file.name
+
+                    # Upscale the image
+                    upscale_factor = 2  # You can adjust this value
+                    upscaled_image = nearestNeighboor(tmp_file_path, upscale_factor)
+
+                    # Convert the numpy array to bytes
+                    is_success, buffer = cv2.imencode(".png", upscaled_image)
+                    upscaled_image_bytes = buffer.tobytes()
+
+                    # Save upscaled image to session state
+                    st.session_state.upscaled_image = upscaled_image_bytes
+
+                    # Clean up the temporary file
+                    os.unlink(tmp_file_path)
+
+                    time.sleep(2)  # Simulating processing time
+
                 st.session_state.upscaled = True
-                st.experimental_rerun()
+                st.rerun()
         else:
-            st.image(st.session_state.uploaded_file, use_column_width=True)
+            # Convert bytes to numpy array for display
+            nparr = np.frombuffer(st.session_state.upscaled_image, np.uint8)
+            img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            st.image(img_np, channels="BGR", use_container_width=True)
 
     if st.session_state.upscaled:
         st.markdown("<br>", unsafe_allow_html=True)
@@ -75,8 +102,8 @@ def show():
             if st.button("← Back"):
                 st.session_state.upscaled = False
                 st.session_state.page = "bank_statement"
-                st.experimental_rerun()
+                st.rerun()
         with col3:
             if st.button("Verify →"):
                 st.session_state.page = "results_2"
-                st.experimental_rerun()
+                st.rerun()

@@ -5,7 +5,7 @@ import time
 def show():
     if st.session_state.uploaded_file is None:
         st.session_state.page = "bank_statement"
-        st.experimental_rerun()
+        st.rerun()
 
     st.markdown(
         """
@@ -47,7 +47,7 @@ def show():
             with st.spinner("Verifying bank statement..."):
                 time.sleep(5)
             st.session_state.verification_complete = True
-            st.experimental_rerun()
+            st.rerun()
 
         st.success("✅ Bank Statement Verification Successful!")
 
@@ -65,4 +65,4 @@ def show():
             st.session_state.upscaled = False
             st.session_state.verification_complete = False
             st.session_state.page = "passport"
-            st.experimental_rerun()
+            st.rerun()
