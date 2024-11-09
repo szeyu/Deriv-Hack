@@ -1,0 +1,4 @@
+User_ID,Gmail,Status_1,Status_2,Message,Alert
+A001,user1@example.com,Success,Failed,Passport verified successfully,
+A002,user2@example.com,Failed,Success,Passport name mismatch,Suspicious
+A003,user3@example.com,Failed,Failed,Passport expired or age below 18,Banned
