@@ -3,7 +3,15 @@ import streamlit as st
 import logging
 import asyncio
 
-from pages import passport, upscale_1, results_1, bank_statement, upscale_2, results_2
+from pages import (
+    login,
+    passport,
+    upscale_1,
+    results_1,
+    bank_statement,
+    upscale_2,
+    results_2,
+)
 import time
 
 st.set_page_config(
@@ -26,11 +34,16 @@ if "statement_info" not in st.session_state:
     st.session_state.statement_info = ""
 if "verification_complete" not in st.session_state:
     st.session_state.verification_complete = False
+if "user_email" not in st.session_state:
+    st.session_state.user_email = None
+
 
 # Main app logic
 def main():
-            
-    if st.session_state.page == "passport":
+
+    if st.session_state.page == "login":
+        login.show()
+    elif st.session_state.page == "passport":
         passport.show()
     elif st.session_state.page == "upscale_1":
         upscale_1.show()
@@ -48,13 +61,12 @@ def main():
         """
     <div style='position: fixed; left: 0; bottom: 0; width: 100%; background-color: #1E1E1E; padding: 10px 0;'>
         <div style='max-width: 800px; margin: 0 auto; text-align: center;'>
-            <p style='color: #888888; font-size: 12px; margin: 0;'>© 2023 SwiftAuth v1.0.0 | Document Authentication Made Easy — Developed by John Ong from EdgeRunners</p>
+            <p style='color: #888888; font-size: 12px; margin: 0;'>© 2024 SwiftAuth v1.0.0 | Document Authentication Made Easy — Developed by John Ong from EdgeRunners</p>
         </div>
     </div>
     """,
         unsafe_allow_html=True,
     )
-
 
 if __name__ == "__main__":
     main()

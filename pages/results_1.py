@@ -9,6 +9,8 @@ from utils.zerox_model import zerox_model
 from PIL import Image
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
+from utils.verify import verify_user_data
+
 
 def show():
     if st.session_state.uploaded_file is None:
@@ -97,12 +99,38 @@ Example format:
 }
 ```
 """
-                    result = asyncio.run(zerox_model(pdf_path, custom_system_prompt=custom_prompt))
+                    result = asyncio.run(
+                        zerox_model(pdf_path, custom_system_prompt=custom_prompt)
+                    )
 
                     # Store the result in session state
                     st.session_state.passport_info = result
 
-                    time.sleep(2)  # Short delay for UI smoothness
+                    # Retrieve user email from session state
+                    user_email = st.session_state.get("user_email", None)
+                    if user_email is None:
+                        st.error("User email not found. Please log in again.")
+                        st.session_state.page = "login"
+                        st.rerun()
+
+                    # Verify user data against the database
+                    verification_result = verify_user_data(user_email)
+
+                    if verification_result["status"] == "success":
+                        st.session_state.verification_status = "success"
+                        st.session_state.verification_message = verification_result[
+                            "message"
+                        ]
+                    else:
+                        st.session_state.verification_status = "failure"
+                        st.session_state.verification_message = verification_result[
+                            "message"
+                        ]
+                        st.session_state.verification_alert = verification_result.get(
+                            "alert", ""
+                        )
+
+                        time.sleep(2)  # Short delay for UI smoothness
                 finally:
                     # Clean up temporary files
                     for file in os.listdir(temp_dir):
@@ -117,20 +145,28 @@ Example format:
             st.session_state.verification_complete = True
             st.rerun()
 
-        st.success("✅ Passport Verification Successful!")
-
-        st.markdown("### Verification Details")
-        st.markdown("✓ Passport Type: Valid")
-        st.markdown("✓ MRZ Check: Passed")
-        st.markdown("✓ Security Features: Verified")
-        st.markdown("✓ Last Verified: Just now")
-
-        st.markdown("### Next Steps")
-        st.markdown("Please proceed to upload your bank statement.")
-
-        if st.button("Continue to Bank Statement →"):
-            st.session_state.uploaded_file = None
-            st.session_state.upscaled = False
-            st.session_state.verification_complete = False
-            st.session_state.page = "bank_statement"
-            st.rerun()
+        # Display verification results based on the verification_status
+        if st.session_state.get("verification_status") == "success":
+            st.success("✅ Passport Verification Successful!")
+            st.markdown(st.session_state.verification_message)
+            st.markdown("### Next Steps")
+            st.markdown("Please proceed to upload your bank statement.")
+            if st.button("Continue to Bank Statement →"):
+                st.session_state.uploaded_file = None
+                st.session_state.upscaled = False
+                st.session_state.verification_complete = False
+                st.session_state.page = "bank_statement"
+                st.rerun()
+        elif st.session_state.get("verification_status") == "failure":
+            st.error(
+                f"❌ Passport Verification Failed: {st.session_state.verification_message}"
+            )
+            st.warning(f"**Alert:** {st.session_state.verification_alert}")
+            st.markdown("### Next Steps")
+            st.markdown("Please contact support or try submitting your passport again.")
+            if st.button("← Start New Verification"):
+                st.session_state.uploaded_file = None
+                st.session_state.upscaled = False
+                st.session_state.verification_complete = False
+                st.session_state.page = "login"  # Navigate back to login
+                st.rerun()

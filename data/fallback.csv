@@ -1,4 +1,6 @@
-User_ID,Gmail,Status_1,Status_2,Message,Alert
-A001,user1@example.com,Success,Failed,Passport verified successfully,
-A002,user2@example.com,Failed,Success,Passport name mismatch,Suspicious
-A003,user3@example.com,Failed,Failed,Passport expired or age below 18,Banned
+Email,Status,Message,Alert
+user1@example.com,Success,Passport verified successfully, 
+user2@example.com,Failed,Passport name mismatch,Suspicious
+user3@example.com,Failed,Passport expired,Banned
+user@example.com,failure,Email not found in database.,rejected
+szeyusim@gmail.com,success,Name matches.,

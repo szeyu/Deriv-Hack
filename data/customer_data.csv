@@ -1,10 +1,11 @@
-User_ID,First_Name,Last_Name,Email,Date_of_Birth,Address,Country,ID_Number
-A001,Anthony,Roman,anthonyroman49@gmail.com,20/6/1949,"17, Lorong Bukit Gambir, Green Lane, 11700 Gelugor, Penang",Malaysia,861-76-0249
-A002,Matthew,Joyce,matthewjoyce02@gmail.com,21/8/2002,"B-12-3, Wisma Cosway, Jalan Raja Chulan, 50200 Kuala Lumpur, Federal Territory of Kuala Lumpur",Malaysia,783-25-3383
-A003,Kenneth,Sellers,kennethsellers51@gmail.com,12/12/1951,"13, Jalan 15/1, Seksyen 15, 40000 Shah Alam, Selangor",Malaysia,849-21-1093
-A004,Wendy,Guzman,wendyguzma85@gmail.com,30/1/1985,"No. 8, Jalan Kempas 1, Taman Kempas, 81200 Johor Bahru, Johor",Malaysia,040-83-3067
-A005,Julie,Pugh,juliepugh88@gmail.com,11/9/1988,"Lot 5, Jalan Gambang, Kampung Seri Damai, 25150 Kuantan, Pahang",Malaysia,896-36-0079
-A006,Joan,Gonzalez,joangonzalez52@gmail.com,25/5/1952,"19 Rue de Rivoli, 75004 Paris, �le-de-France, France",France,284-63-2230
-A007,Jessica,Robinson,jessicarobinson89@gmail.com,25/12/1989,"Am Lustgarten 1, 10178 Berlin, Berlin, Germany",Germany,688-01-0551
-A008,David,Phillips,davidphillips94@gmail.com,4/7/1994,"Calle Mayor 32, 28013 Madrid, Community of Madrid, Spain.",Spain,692-89-9239
-A009,Chad,Cardenas,chadcardenas76@gmail.com,2/6/1976,"123 Bukit Timah Road, #05-08, Farrer Court, Singapore 259764, Singapore.",Singapore,398-17-2768
+Email,Name,Date_of_Birth,Address,Country,ID_Number
+anthonyroman49@gmail.com,Anthony Roman,20/6/1949,"17, Lorong Bukit Gambir, Green Lane, 11700 Gelugor, Penang",Malaysia,861-76-0249
+matthewjoyce02@gmail.com,Matthew Joyce,21/8/2002,"B-12-3, Wisma Cosway, Jalan Raja Chulan, 50200 Kuala Lumpur, Federal Territory of Kuala Lumpur",Malaysia,783-25-3383
+kennethsellers51@gmail.com,Kenneth Sellers,12/12/1951,"13, Jalan 15/1, Seksyen 15, 40000 Shah Alam, Selangor",Malaysia,849-21-1093
+wendyguzma85@gmail.com,Wendy Guzman,30/1/1985,"No. 8, Jalan Kempas 1, Taman Kempas, 81200 Johor Bahru, Johor",Malaysia,040-83-3067
+juliepugh88@gmail.com,Julie Pugh,11/9/1988,"Lot 5, Jalan Gambang, Kampung Seri Damai, 25150 Kuantan, Pahang",Malaysia,896-36-0079
+joangonzalez52@gmail.com,Joan Gonzalez,25/5/1952,"19 Rue de Rivoli, 75004 Paris, le-de-France, France",France,284-63-2230
+jessicarobinson89@gmail.com,Jessica Robinson,25/12/1989,"Am Lustgarten 1, 10178 Berlin, Berlin, Germany",Germany,688-01-0551
+davidphillips94@gmail.com,David Phillips,4/7/1994,"Calle Mayor 32, 28013 Madrid, Community of Madrid, Spain",Spain,692-89-9239
+chadcardenas76@gmail.com,Chad Cardenas,2/6/1976,"123 Bukit Timah Road, #05-08, Farrer Court, Singapore 259764, Singapore",Singapore,398-17-2768
+szeyusim@gmail.com,Sim Sze Yu,17/4/2004,"15, Persiaran Kelincap Tiga, 11900 Bayan Lepas, Pulau Pinang",123-45-6789 
