@@ -4,3 +4,4 @@ __pycache__
 myenv/
 __pycache__/
 pages/*.pyc
+output_test/
