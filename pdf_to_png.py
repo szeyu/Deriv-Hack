@@ -35,6 +35,6 @@ def pdf_to_png(pdf_path, output_folder, dpi=300):
     print("PDF to PNG conversion completed!")
 
 # Example usage
-pdf_path = "Offer_Letter_-_BM.pdf" # Replace with actual name of the input PDF document
-output_folder = "Offer_Letter_-_BM.png" # Replace with actual name of the output PNG document
-pdf_to_png(pdf_path, output_folder)
+# pdf_path = "Offer_Letter_-_BM.pdf" # Replace with actual name of the input PDF document
+# output_folder = "Offer_Letter_-_BM.png" # Replace with actual name of the output PNG document
+# pdf_to_png(pdf_path, output_folder)
