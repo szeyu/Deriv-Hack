@@ -1,31 +1,82 @@
-from pyzerox import zerox
+from PIL import Image
+import pytesseract
+import sqlite3
+import re
+import streamlit as st
 import os
 from dotenv import load_dotenv
-import streamlit as st
 
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 
-# placeholder for additional model kwargs which might be required for some models
-kwargs = {}
+# Database setup (SQLite)
+def init_db():
+    conn = sqlite3.connect("passport_data.db")
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS passport_info (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    return conn
 
-# system prompt to use for the vision model
-custom_system_prompt = None
+# Function to insert extracted name into the database
+def insert_name_to_db(conn, name):
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO passport_info (name) VALUES (?)", (name,))
+    conn.commit()
 
-###################### Example for OpenAI ######################
-model = "gpt-4o-mini"  # openai model
-os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")  # Load API key from .env file
+# Function to extract name using regex
+def extract_name_from_text(text):
+    # Regular expression for typical name format in passports
+    name_pattern = re.compile(r'(?i)name\s*[:\s]*([A-Z\s]+)')
+    match = name_pattern.search(text)
+    if match:
+        return match.group(1).strip()
+    return None
 
-###################### Example for Gemini ######################
-# model = "gemini/gpt-4o-mini" ## "gemini/<gemini_model>" -> format <provider>/<model>
-# os.environ['GEMINI_API_KEY'] = "" # your-gemini-api-key
+# Function to perform OCR on JPEG image
+def perform_ocr(image_path):
+    try:
+        image = Image.open(image_path)
+        text = pytesseract.image_to_string(image)
+        return text
+    except Exception as e:
+        st.error(f"Failed to extract text from image: {e}")
+        return ""
 
-async def zerox_model(input_doc_path):
-    # process only some pages or all
-    select_pages = None  # None for all, but could be int or list(int) page numbers (1 indexed)
+# Streamlit UI for file upload
+def main():
+    st.title("Passport Name Extraction from JPEG")
 
-    output_dir = "./output_test"  # directory to save the consolidated markdown file
-    result = await zerox(file_path=input_doc_path, model=model, output_dir=output_dir,
-                        custom_system_prompt=custom_system_prompt, select_pages=select_pages, **kwargs)
-    st.write(result)
-    st.markdown(result)
+    uploaded_file = st.file_uploader("Upload Passport Image (JPEG)", type=["jpg", "jpeg", "png"])
+    if uploaded_file is not None:
+        # Save the uploaded file temporarily
+        input_doc_path = f"./temp/{uploaded_file.name}"
+        os.makedirs("./temp", exist_ok=True)
+        with open(input_doc_path, "wb") as f:
+            f.write(uploaded_file.read())
+
+        st.info("Performing OCR to extract text from image...")
+        ocr_text = perform_ocr(input_doc_path)
+
+        # Display extracted text
+        st.write("Extracted Text:")
+        st.text(ocr_text)
+
+        # Extract name using regex
+        extracted_name = extract_name_from_text(ocr_text)
+        if extracted_name:
+            st.write(f"Extracted Name: {extracted_name}")
+
+            # Store extracted name in the database
+            conn = init_db()
+            insert_name_to_db(conn, extracted_name)
+            st.success("Name successfully stored in the database.")
+        else:
+            st.error("Could not extract the name from the text.")
+
+if __name__ == "__main__":
+    main()
