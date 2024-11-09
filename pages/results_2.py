@@ -8,6 +8,7 @@ from PIL import Image
 from reportlab.pdfgen import canvas
 import asyncio
 from utils.zerox_model import zerox_model
+from utils.document_similarity import compare_images
 
 
 def show():
@@ -70,7 +71,24 @@ def show():
                     nparr = np.frombuffer(st.session_state.upscaled_image, np.uint8)
                     img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
                     cv2.imwrite(png_path, img_np)
+                    
+                    # Compare the bank statement with other bank statements
+                    highest_similarity_file, highest_similarity = compare_images(png_path)
 
+                    if highest_similarity < 0.85: # Threshold for similarity (adjust as needed)
+                        st.error("❌ Verification Failed: The uploaded document does not match any known bank statement format.")
+                        time.sleep(3)  # Short delay for UI smoothness
+                        st.session_state.uploaded_file = None
+                        st.session_state.upscaled = False
+                        st.session_state.verification_complete = False
+                        st.session_state.page = "passport"
+                        st.rerun()
+                    else:
+                        bank_name = highest_similarity_file.split('.')[0].capitalize()
+                        st.success(f"✅ Bank Statement Verification Successful!")
+                        st.info(f"The uploaded document appears to be from {bank_name}.")
+                
+                    
                     # Convert PNG to PDF
                     pdf_path = os.path.join(temp_dir, "bank_statement.pdf")
                     print(pdf_path)

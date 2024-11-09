@@ -105,6 +105,7 @@ def show():
                 )
                 st.image(st.session_state.uploaded_file, caption="Bank Statement", width=300)
                 st.markdown("</div>", unsafe_allow_html=True)
+                
                 if st.button("Next →"):
                     st.session_state.page = "upscale_2"
                     st.rerun()

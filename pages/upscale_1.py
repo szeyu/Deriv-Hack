@@ -100,6 +100,7 @@ def show():
                 st.session_state.page = "passport"
                 st.rerun()
         with col3:
-            if st.button("Verify →"):
+            if st.button("Verify Identity →"):
+                # st.session_state.page = "selfie"
                 st.session_state.page = "results_1"
                 st.rerun()
