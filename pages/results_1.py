@@ -60,7 +60,7 @@ def show():
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if "verification_complete" not in st.session_state:
+        if not st.session_state["verification_complete"]:
             with st.spinner("Verifying passport..."):
                 # Create a temporary directory
                 temp_dir = tempfile.mkdtemp()
