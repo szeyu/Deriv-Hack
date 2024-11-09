@@ -1,0 +1,15 @@
+.stButton > button {
+            width: 150px !important;
+            margin: 0 auto;
+            display: block;
+            background-color: #4A90E2;
+            color: white;
+            border-radius: 20px;
+            padding: 8px 16px;
+            border: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .stButton > button:hover {
+            background-color: white;
+            color: #4A90E2;
+        }
