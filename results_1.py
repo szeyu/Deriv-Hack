@@ -95,15 +95,20 @@ with col2:
                 try:
                     cropped_face = crop_face(st.session_state.upscaled_image)
                     if cropped_face:
-                        # Display cropped face
+                    # Display cropped face in the app
                         st.image(cropped_face, caption="Cropped Face", use_column_width=True)
-                        
+        
                         # Save cropped face globally
                         cropped_face_path = os.path.join(tempfile.gettempdir(), "cropped_face.png")
                         cropped_face.save(cropped_face_path)
                         st.session_state.cropped_face_path = cropped_face_path  # Store path globally
-                        
+        
+                        # Confirm success
                         st.success(f"Cropped face saved at: {cropped_face_path}")
+        
+                        # Optionally load and display the saved image from the path
+                        saved_cropped_face = Image.open(cropped_face_path)
+                        st.image(saved_cropped_face, caption="Saved Cropped Face", use_column_width=True)
                     else:
                         st.warning("No face detected in the uploaded image.")
                 except Exception as e:
