@@ -74,7 +74,7 @@ def show():
             if st.form_submit_button("Login"):
                 if email and password:  # Basic validation
                     st.session_state.user_email = email
-                    st.session_state.page = "passport"
+                    st.session_state.page = "identity"
                     st.rerun()
                 else:
                     st.error("Please fill in all fields")

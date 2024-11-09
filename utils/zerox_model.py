@@ -7,7 +7,7 @@ import streamlit as st
 load_dotenv()
 
 ###################### Example for OpenAI ######################
-model = "gpt-4o-mini"  # openai model
+model = "gpt-4o"  # openai model
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")  # Load API key from .env file
 
 ###################### Example for Gemini ######################

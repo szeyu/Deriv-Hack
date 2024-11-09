@@ -97,7 +97,7 @@ def show():
         with col2:
             if st.button("← Back"):
                 st.session_state.upscaled = False
-                st.session_state.page = "passport"
+                st.session_state.page = "identity"
                 st.rerun()
         with col3:
             if st.button("Verify Identity →"):

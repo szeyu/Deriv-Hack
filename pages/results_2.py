@@ -95,7 +95,7 @@ def show():
                         st.session_state.uploaded_file = None
                         st.session_state.upscaled = False
                         st.session_state.verification_complete = False
-                        st.session_state.page = "passport"
+                        st.session_state.page = "login"
                         st.rerun()
                     else:
                         bank_name = highest_similarity_file.split(".")[0].capitalize()
@@ -106,6 +106,7 @@ def show():
                         sucess_bank_statement_fallback(
                             st.session_state.user_email, bank_name
                         )  # Update fallback CSV
+
                         time.sleep(2)  # Short delay for UI smoothness
 
                     # Convert PNG to PDF
