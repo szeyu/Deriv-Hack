@@ -10,7 +10,7 @@ def show():
             }
             .stButton > button {
                 width: 150px !important;
-                margin: auto 0;
+                margin: 0 auto;
                 display: block;
                 background-color: #4A90E2;
                 color: white;
