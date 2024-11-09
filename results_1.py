@@ -15,9 +15,19 @@ from utils.crop_face import crop_face  # Import the crop_face function
 if "verification_complete" not in st.session_state:
     st.session_state.verification_complete = False
 
+# Ensure to initialize session state variables correctly
 if "uploaded_file" not in st.session_state:
-    st.warning("No file uploaded. Please upload a file.")
-    st.stop()
+    st.session_state.uploaded_file = None
+
+if "upscaled_image" not in st.session_state:
+    st.session_state.upscaled_image = None
+
+if "verification_complete" not in st.session_state:
+    st.session_state.verification_complete = False
+
+uploaded_file = st.file_uploader("Upload Passport Image (JPEG, PNG)", type=["jpg", "jpeg", "png"])
+
+
 
 st.markdown(
     """
@@ -57,6 +67,17 @@ with col2:
             try:
                 # Save the upscaled image as PNG
                 png_path = os.path.join(temp_dir, "passport.png")
+                
+                # Check if the upscaled image exists before attempting to use it
+                if st.session_state.upscaled_image is not None:
+                    nparr = np.frombuffer(st.session_state.upscaled_image, np.uint8)
+                    img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+                    cv2.imwrite(png_path, img_np)
+                else:
+                #     st.error("No upscaled image found. Please upload an image first.")
+                    st.stop()  # Stop further execution if no image is available
+
+                # Convert the upscaled image to an OpenCV-readable format
                 nparr = np.frombuffer(st.session_state.upscaled_image, np.uint8)
                 img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
                 cv2.imwrite(png_path, img_np)
@@ -95,8 +116,8 @@ Extract the following information from the passport image and format it as a JSO
 Example format:
 ```json
 {
-    "full_name": "John Doe",
-    "DOB": "1990-01-01",
+    "full_name": "John Sim Yoong Ying",
+    "DOB": "2004-04-17",
     "nationality": "MALAYSIA",
     "expiry_date": "2030-12-31"
 }
