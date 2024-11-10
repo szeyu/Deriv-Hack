@@ -24,32 +24,38 @@ def extract_json_from_md(file_path):
 def update_fallback_csv(email, status, message, alert=""):
     """
     Update the 'data/fallback.csv' with the customer's verification attempt.
-    Email is the primary key, status indicates verification result.
+    Adds DateTime column with current datetime.
     """
     try:
+        from datetime import datetime
+
         # Load existing fallback.csv if it exists
         fallback_path = "data/fallback.csv"
-        fallback_df = (
-            pd.read_csv(fallback_path)
-            if pd.io.common.file_exists(fallback_path)
-            else pd.DataFrame(columns=["Email", "Status", "Message", "Alert"])
-        )
+        if pd.io.common.file_exists(fallback_path):
+            fallback_df = pd.read_csv(fallback_path)
+        else:
+            fallback_df = pd.DataFrame(
+                columns=["Email", "DateTime", "Status", "Message", "Alert"]
+            )
+
+        # Get current datetime in the format 'YYYY-MM-DD HH:MM:SS'
+        current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # Create new data entry
         new_data = pd.DataFrame(
             {
                 "Email": [email],
+                "DateTime": [current_datetime],
                 "Status": [status],
                 "Message": [message],
                 "Alert": [alert],
             }
         )
 
-        # Remove existing entry with same email if exists
-        fallback_df = fallback_df[fallback_df["Email"] != email]
-
-        # Append new data
+        # Append new data without removing previous entries
         fallback_df = pd.concat([fallback_df, new_data], ignore_index=True)
+
+        # Save updated fallback.csv
         fallback_df.to_csv(fallback_path, index=False)
     except Exception as e:
         print(f"Error updating fallback.csv: {e}")
@@ -196,7 +202,12 @@ def verify_user_data_2(email):
         json_data.get("address", "").strip().lower()
         != customer_info["Address"].strip().lower()
     ):
-        update_fallback_csv(email, "failure", "Address does not match.", "Rejected (Contact Support to update address)")
+        update_fallback_csv(
+            email,
+            "failure",
+            "Address does not match.",
+            "Rejected (Contact Support to update address)",
+        )
         return {
             "status": "failure",
             "message": "Address does not match.",
@@ -226,7 +237,9 @@ def invalid_bank_statement_fallback(email):
     """
     update the fallback CSV if there is an error on verifying bank statement.
     """
-    update_fallback_csv(email, "failure", "Error verifying bank statement.", "Suspicious")
+    update_fallback_csv(
+        email, "failure", "Error verifying bank statement.", "Suspicious"
+    )
     return {"status": "failure", "message": "Error verifying bank statement."}
 
 
