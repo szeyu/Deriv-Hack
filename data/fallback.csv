@@ -1,11 +1,14 @@
-Email,Status,Message,Alert
-user@example.com,success,Passport name matches & age requirements met., 
-user1@example.com,failure,Passport name mismatch,Suspicious
-user2@example.com,Failed,Does not meet age requirement.,rejected
-user3@example.com,failure,Email not found in database.,rejected
-user4@example.com,success,Bank statement from MAYBANK verified.,
-user5@example.com,failure,Error verifying bank statement.,Suspicious
-user6@example.com,failure,Bank statement verified successfully.,Suspicious
-user7@example.com,failure,Account holder name does not match.,Suspicious
-user8@example.com,failure,Address does not match.,Suspicious
-szeyusim@gmail.com,success,Bank statement from Publicbank verified.,
+Email,DateTime,Status,Message,Alert
+user@example.com,2024-09-01 08:15:30,success,Passport name matches & age requirements met.,
+user1@example.com,2024-09-02 14:47:15,failure,Passport name mismatch.,Suspicious
+user8@example.com,2024-09-03 10:32:45,failure,Passport name mismatch.,Suspicious
+user2@example.com,2024-09-04 18:05:10,failure,Does not meet age requirement.,rejected
+user3@example.com,2024-09-05 09:27:40,failure,Email not found in database.,rejected
+user4@example.com,2024-09-06 15:20:25,success,Bank statement from MAYBANK verified.,
+user5@example.com,2024-09-07 11:45:55,failure,Error verifying bank statement.,Suspicious
+user8@example.com,2024-09-08 16:50:30,failure,Error verifying bank statement.,Suspicious
+user6@example.com,2024-09-09 07:33:00,success,Bank statement verified successfully.,
+user7@example.com,2024-09-10 20:10:20,failure,Account holder name does not match.,Suspicious
+user1@example.com,2024-09-11 13:58:40,failure,Address does not match.,rejected
+user8@example.com,2024-09-12 12:05:15,failure,Address does not match.,rejected
+szeyusim@gmail.com,2024-09-13 17:30:50,success,Bank statement from Publicbank verified.,
