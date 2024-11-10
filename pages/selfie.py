@@ -1,3 +1,4 @@
+import time
 import streamlit as st
 from deepface import DeepFace
 import cv2
@@ -72,7 +73,7 @@ def show():
 
         # Buttons for webcam control
         start = st.button('Start Camera')
-        stop = st.button('Stop Camera')
+        stop = st.button('Capture Selfie')
 
         if start:
             while not stop:
@@ -106,15 +107,17 @@ def show():
                 st.write(f"Cosine Similarity Score: {similarity_score}")
 
                 # Show whether they are the same person based on a threshold
-                if similarity_score < 0.4:  
+                if similarity_score < 0.6:  
                     st.success("The images are likely of the same person!")
                     # Navigate to result1 page
                     st.session_state.page = "results_1"
+                    time.sleep(5)
                     st.rerun()
                 else:
                     st.error("The images are likely of different people.")
                     # Navigate back
                     st.session_state.page = "identity"
+                    time.sleep(5)
                     st.rerun()
             except Exception as e:
                 st.error(f"An error occurred during face comparison: {str(e)}")

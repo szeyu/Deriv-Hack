@@ -8,4 +8,4 @@ user5@example.com,failure,Error verifying bank statement.,Suspicious
 user6@example.com,failure,Bank statement verified successfully.,Suspicious
 user7@example.com,failure,Account holder name does not match.,Suspicious
 user8@example.com,failure,Address does not match.,Suspicious
-szeyusim@gmail.com,success,Bank statement from Publicbank verified.,
+szeyusim@gmail.com,failure,Account holder name does not match.,Suspicious
