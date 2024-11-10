@@ -78,8 +78,15 @@ def show():
                     is_success, buffer = cv2.imencode(".png", upscaled_image)
                     upscaled_image_bytes = buffer.tobytes()
 
-                    # Save upscaled image to session state
+                    # Save upscaled image to a local folder
                     st.session_state.upscaled_image = upscaled_image_bytes
+                    upscaled_image_path = os.path.join("upscaled_images", "upscaled_image.png")
+                    os.makedirs(os.path.dirname(upscaled_image_path), exist_ok=True)
+                    with open(upscaled_image_path, "wb") as f:
+                        f.write(upscaled_image_bytes)
+
+                    # Save the path to session state
+                    st.session_state.upscaled_image_path = upscaled_image_path
 
                     # Clean up the temporary file
                     os.unlink(tmp_file_path)

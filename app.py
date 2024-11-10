@@ -30,6 +30,10 @@ if "uploaded_file" not in st.session_state:
     st.session_state.uploaded_file = None
 if "upscaled" not in st.session_state:
     st.session_state.upscaled = False
+if "upscaled_image" not in st.session_state:
+    st.session_state.upscaled_image = False
+if "upscaled_image_path" not in st.session_state:
+    st.session_state.upscaled_image_path = False
 if "selfied" not in st.session_state:
     st.session_state.selfied = False
 if "captured_image" not in st.session_state:

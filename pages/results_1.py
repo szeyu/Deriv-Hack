@@ -104,7 +104,7 @@ def show():
                     # Call zerox_model to extract information
                     custom_prompt = """
 Extract the following information from the identity image and format it as a JSON object within triple backticks. Use the following keys: full_name, DOB, nationality, expiry_date. If any field is not found or unclear, use <NULL> as the value.
-
+for DOB, you should use the format "YYYY-MM-DD"
 Example format:
 ```json
 {

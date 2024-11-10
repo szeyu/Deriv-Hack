@@ -12,3 +12,6 @@ user7@example.com,2024-09-10 20:10:20,failure,Account holder name does not match
 user1@example.com,2024-09-11 13:58:40,failure,Address does not match.,rejected
 user8@example.com,2024-09-12 12:05:15,failure,Address does not match.,rejected
 szeyusim@gmail.com,2024-09-13 17:30:50,success,Bank statement from Publicbank verified.,
+szeyusim@gmail.com,2024-11-10 08:36:53,success,Name matches.,
+szeyusim@gmail.com,2024-11-10 08:38:06,success,Bank statement from Publicbank verified.,
+szeyusim@gmail.com,2024-11-10 08:38:19,failure,Account holder name does not match.,Suspicious
